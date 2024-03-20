@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .btn-filled {
+    @apply rounded-full px-4 py-1 outline outline-1 outline-secondary bg-secondary text-white;
+  }
+
+  .btn-outline {
+    @apply rounded-full px-4 py-1 outline outline-1 outline-secondary text-secondary;
+  }
+}
+
+@layer base {
+  h1 {
+    @apply text-2xl font-semibold;
+  }
+}

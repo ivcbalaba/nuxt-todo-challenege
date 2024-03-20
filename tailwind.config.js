@@ -6,8 +6,16 @@ export default {
     "./pages/**/*.vue",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ["Roboto", "sans-serif"],
+      },
+      colors: {
+        primary: "#1D50A2",
+        secondary: "#1976D2",
+        positive: "#26A69A",
+      },
+    },
   },
   plugins: [],
-}
-
+};

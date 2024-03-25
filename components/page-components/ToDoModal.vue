@@ -23,15 +23,16 @@
 </transition>
 </template>
 
-<script setup>
-const props = defineProps({
-    show: {
-        type: Boolean,
-        default: false
-    },
-    title: {
-        type: String,
-    }
+<script
+    setup
+    lang="ts"
+>
+
+const props = withDefaults(defineProps<{
+    show: boolean,
+    title?: string,
+}>(), {
+    show: false
 })
 
 const emit = defineEmits(['close']);

@@ -79,10 +79,11 @@
     setup
     lang="ts"
 >
+import { type Ref } from "vue";
 const { $_, $dayjs } = useNuxtApp()
 
-const showModal = ref(false)
-const sortVisible = ref(false);
+const showModal: Ref<boolean> = ref(false)
+const sortVisible: Ref<boolean> = ref(false);
 
 
 </script>

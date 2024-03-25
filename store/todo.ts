@@ -1,10 +1,22 @@
 import { defineStore } from "pinia";
 import { type TodoState, type Todo } from "~/types/todo";
+
 export const useTodoStore = defineStore({
   id: "todo",
   state: (): TodoState => {
     return {
-      todoList: [],
+      todoList: [
+        {
+          id: 1,
+          name: "Develop a Mobile App Prototype",
+          description:
+            "Develop a mobile app prototype by outlining key features and creating wireframes.",
+          time_left: "3 hrs 30mins",
+          start_date: "Feb 14, 2023 09:30 AM",
+          end_date: "Feb 14, 2023 12:30 PM",
+          created_at: "Feb 13, 2023 5:00 PM",
+        },
+      ],
     };
   },
   actions: {

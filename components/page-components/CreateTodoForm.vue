@@ -45,12 +45,14 @@
 </div>
 </template>
 
-<script setup>
-const props = defineProps({
-    edit: {
-        type: Boolean,
-        default: false
-    }
+<script
+    setup
+    lang="ts"
+>
+const props = withDefaults(defineProps<{
+    edit: boolean,
+}>(), {
+    edit: false
 })
 
 const emit = defineEmits(['close']);

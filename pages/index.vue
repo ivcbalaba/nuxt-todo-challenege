@@ -43,23 +43,35 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>Test</td>
-                <td>Test</td>
-                <td>Test</td>
-                <td>Test</td>
-                <td>Test</td>
-                <td>Test</td>
-                <td>Test</td>
-            </tr>
-            <tr>
-                <td>Test</td>
-                <td>Test</td>
-                <td>Test</td>
-                <td>Test</td>
-                <td>Test</td>
-                <td>Test</td>
-                <td>Test</td>
+            <tr v-for="todo in todoList">
+                <td>{{ todo.name }}</td>
+                <td>{{ todo.description }}</td>
+                <td>{{ todo.time_left }}</td>
+                <td>{{ todo.start_date }}</td>
+                <td>{{ todo.end_date }}</td>
+                <td>{{ todo.created_at }}</td>
+                <td>
+                    <div class="flex flex-row gap-2">
+                        <button
+                            class="actions"
+                            @click=""
+                        >
+                            <Icon
+                                icon="ph:trash"
+                                height="20"
+                            />
+                        </button>
+                        <button
+                            class="actions"
+                            @click=""
+                        >
+                            <Icon
+                                icon="fe:edit"
+                                height="20"
+                            />
+                        </button>
+                    </div>
+                </td>
             </tr>
         </tbody>
     </table>
@@ -80,7 +92,12 @@
     lang="ts"
 >
 import { type Ref } from "vue";
+import { storeToRefs } from "pinia";
+import { useTodoStore } from "~~/store/todo";
 const { $_, $dayjs } = useNuxtApp()
+
+const todoStore = useTodoStore();
+const { todoList } = storeToRefs(todoStore);
 
 const showModal: Ref<boolean> = ref(false)
 const sortVisible: Ref<boolean> = ref(false);
@@ -101,6 +118,6 @@ tr {
 }
 
 td {
-    @apply pl-4
+    @apply pl-4 py-6
 }
 </style>

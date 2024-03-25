@@ -10,6 +10,10 @@
   .btn-outline {
     @apply rounded-full px-4 py-1 outline outline-1 outline-secondary text-secondary;
   }
+
+  .actions {
+    @apply border-none text-gray-400 bg-transparent;
+  }
 }
 
 @layer base {

@@ -43,10 +43,19 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="todo in todoList">
+            <tr v-if="todoList.length == 0">
+                <td
+                    colspan="12"
+                    align="center"
+                >Your to do list is empty.</td>
+            </tr>
+            <tr
+                v-else
+                v-for="todo in todoList"
+            >
                 <td>{{ todo.name }}</td>
                 <td>{{ todo.description }}</td>
-                <td>{{ todo.end_date ? timeLeft(todo.end_date) : 'N/A' }}</td>
+                <td>{{ todo.time_left }}</td>
                 <td>{{ todo.start_date }}</td>
                 <td>{{ todo.end_date }}</td>
                 <td>{{ todo.created_at }}</td>
@@ -106,35 +115,6 @@ const { todoList } = storeToRefs(todoStore);
 
 const showModal: Ref<boolean> = ref(false)
 const sortVisible: Ref<boolean> = ref(false);
-
-function timeLeft(endDate: string | { toString: () => string }): string {
-    let dateString: string;
-    if (typeof endDate === 'object' && endDate.toString) {
-        dateString = endDate.toString();
-    } else {
-        dateString = endDate as string;
-    }
-
-    const now = $dayjs();
-    const end = $dayjs(dateString);
-    const diff = end.diff(now);
-
-    const days = Math.floor(diff / (24 * 60 * 60 * 1000));
-    const hours = Math.floor((diff % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
-    const minutes = Math.floor((diff % (60 * 60 * 1000)) / (60 * 1000));
-
-    let timeLeftStr = '';
-    if (days > 0) {
-        timeLeftStr += `${days} days, `;
-    }
-    if (hours > 0 || days > 0) {
-        timeLeftStr += `${hours} hrs, `;
-    }
-    timeLeftStr += `${minutes} mins`;
-
-    return timeLeftStr;
-}
-
 
 function submitHandler(data: Todo) {
     console.log(data)

@@ -80,7 +80,7 @@ const formData = reactive({
     name: null,
     description:
         null,
-    // time_left: null,
+    time_left: null,
     start_date: null,
     end_date: null,
     created_at: null,
@@ -104,15 +104,23 @@ async function onSubmit() {
     let dateNow = new Date();
     let id = todoList.value.length
 
+    let timeLeftStr = '';
+    if (days > 0) {
+        timeLeftStr += `${days} day${days > 1 ? 's' : ''}, `;
+    }
+    if (hours > 0 || days > 0) {
+        timeLeftStr += `${hours} hr${hours > 1 ? 's' : ''}, `;
+    }
+    timeLeftStr += `${minutes} min${minutes > 1 ? 's' : ''}`;
+
     const payload: Todo = {
         ...formData,
         id: id++,
         start_date: $dayjs(formData.start_date).format('MMM D, YYYY hh:mm A'),
         end_date: $dayjs(formData.end_date).format('MMM D, YYYY hh:mm A'),
-        // time_left: `${days} days ${hours} hrs ${minutes} mins`,
+        time_left: timeLeftStr,
         created_at: $dayjs(dateNow).format('MMM D, YYYY hh:mm A')
     }
-    // console.log(payload)
     props.submitHandler(payload)
 }
 

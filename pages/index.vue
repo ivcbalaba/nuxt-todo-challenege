@@ -29,9 +29,9 @@
     </div>
 </div>
 
-<div class="bg-white m-10 ">
+<div class="todo-body">
     <table class="w-full">
-        <thead>
+        <thead class="sticky-header">
             <tr>
                 <th>Task Name</th>
                 <th>Description</th>
@@ -200,6 +200,15 @@ function openEditModal(todo: Todo) {
     lang="postcss"
     scoped
 >
+.todo-body {
+    @apply bg-white m-10 overflow-auto max-h-[50vh]
+}
+
+.sticky-header {
+    @apply sticky top-0
+}
+
+
 th {
     @apply bg-primary text-sm text-left text-white font-normal p-4;
 }
@@ -209,6 +218,6 @@ tr {
 }
 
 td {
-    @apply pl-4 py-6
+    @apply pl-4 py-4
 }
 </style>

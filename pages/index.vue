@@ -63,7 +63,7 @@
                     <div class="flex flex-row gap-2">
                         <button
                             class="actions"
-                            @click=""
+                            @click="openDeleteModal(todo.id)"
                         >
                             <Icon
                                 icon="ph:trash"
@@ -97,6 +97,19 @@
         />
     </template>
 </ToDoModal>
+<ToDoModal
+    :show="showDeleteModal"
+    title="Delete Task"
+    @close="showDeleteModal = false"
+    @confirm="deleteTask"
+    :isDelete="true"
+>
+    <template #modal-body>
+        <div class="m-10">
+            Are you sure you want to delete this task?
+        </div>
+    </template>
+</ToDoModal>
 </template>
 
 <script
@@ -114,12 +127,26 @@ const todoStore = useTodoStore();
 const { todoList } = storeToRefs(todoStore);
 
 const showModal: Ref<boolean> = ref(false)
+const showDeleteModal: Ref<boolean> = ref(false)
 const sortVisible: Ref<boolean> = ref(false);
+const taskId: Ref<number | null> = ref(null);
 
 function submitHandler(data: Todo) {
     console.log(data)
     todoStore.create(data)
     showModal.value = false;
+}
+
+function openDeleteModal(id: number | null) {
+    showDeleteModal.value = true;
+    taskId.value = id
+}
+
+function deleteTask() {
+    if (taskId.value !== null) {
+        todoStore.delete(taskId.value)
+    }
+    showDeleteModal.value = false;
 }
 
 </script>

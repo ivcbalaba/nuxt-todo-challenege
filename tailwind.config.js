@@ -14,6 +14,7 @@ export default {
         primary: "#1D50A2",
         secondary: "#1976D2",
         positive: "#26A69A",
+        negative: "#C10015",
       },
     },
   },

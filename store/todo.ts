@@ -12,13 +12,14 @@ export const useTodoStore = defineStore({
   actions: {
     create(item: Todo) {
       this.todoList.push(item);
-      console.log(this.todoList);
     },
-    //   delete(itemId) {
-    //     this.todoList = this.todoList.filter((object) => {
-    //       object.id !== itemId;
-    //     });
-    //   },
+    delete(itemId: number) {
+      const { $_ } = useNuxtApp();
+      console.log("itemId", itemId);
+      this.todoList = $_.filter(this.todoList, (item) => {
+        return item.id !== itemId;
+      });
+    },
     //   toggleCompleted(idToFind) {
     //     const todo = this.todoList.find((obj) => obj.id == idToFind);
     //     if (todo) {

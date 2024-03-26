@@ -70,7 +70,7 @@ const { todoList } = storeToRefs(todoStore);
 
 
 const props = withDefaults(defineProps<{
-    edit: boolean,
+    edit?: boolean,
     submitHandler: Function
 }>(), {
     edit: false

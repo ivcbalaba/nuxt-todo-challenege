@@ -27,5 +27,34 @@ export const useTodoStore = defineStore({
         this.todoList[index] = { ...this.todoList[index], ...data };
       }
     },
+    sort(sortBy: string) {
+      const { $_ } = useNuxtApp();
+      switch (sortBy) {
+        case "A-Z":
+          this.todoList = $_.sortBy(this.todoList, ["name"]);
+          break;
+        case "Z-A":
+          let sortedTodo = $_.sortBy(this.todoList, ["name"]);
+          this.todoList = $_.reverse(sortedTodo);
+          break;
+        case "createdAsc":
+          this.todoList = $_.sortBy(this.todoList, (todo) => {
+            if (typeof todo.created_at === "string") {
+              return new Date(todo.created_at);
+            }
+            return new Date();
+          });
+          break;
+        case "createdDesc":
+          let sortedTodoByDate = $_.sortBy(this.todoList, (todo) => {
+            if (typeof todo.created_at === "string") {
+              return new Date(todo.created_at);
+            }
+            return new Date();
+          });
+          this.todoList = $_.reverse(sortedTodoByDate);
+          break;
+      }
+    },
   },
 });

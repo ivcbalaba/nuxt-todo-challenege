@@ -1,7 +1,7 @@
 <template>
 <div class=" bg-white flex flex-row justify-between m-10 p-8">
     <h1>To-Do List</h1>
-    <div class="flex gap-4 ">
+    <div class="flex items-center gap-4 ">
         <div>
             <button
                 class="btn-outline flex flex-row items-center gap-1"
@@ -14,10 +14,22 @@
                 v-show="sortVisible"
                 class="dropdown-menu absolute z-50 mt-1 w-48 bg-white shadow-lg border border-gray-200 rounded-md p-2"
             >
-                <div class="pb-1">Task Name: A - Z</div>
-                <div class="pb-1">Task Name: Z - A</div>
-                <div class="pb-1">Date Created: ASC</div>
-                <div class="pb-1">Date Created: DESC</div>
+                <div
+                    class="sort-option"
+                    @click="sortTodo('A-Z')"
+                >Task Name: A - Z</div>
+                <div
+                    class="sort-option"
+                    @click="sortTodo('Z-A')"
+                >Task Name: Z - A</div>
+                <div
+                    class="sort-option"
+                    @click="sortTodo('createdAsc')"
+                >Date Created: ASC</div>
+                <div
+                    class="sort-option"
+                    @click="sortTodo('createdDesc')"
+                >Date Created: DESC</div>
             </div>
         </div>
         <button
@@ -123,7 +135,7 @@ import { type Todo } from "~/types/todo";
 import { storeToRefs } from "pinia";
 import { useTodoStore } from "~~/store/todo";
 
-const { $dayjs } = useNuxtApp();
+const { $dayjs, $_ } = useNuxtApp();
 
 const todoStore = useTodoStore();
 const { todoList } = storeToRefs(todoStore);
@@ -194,6 +206,11 @@ function openEditModal(todo: Todo) {
     showModal.value = true;
 }
 
+function sortTodo(sortBy: string) {
+    todoStore.sort(sortBy)
+    sortVisible.value = false;
+}
+
 </script>
 
 <style
@@ -208,6 +225,17 @@ function openEditModal(todo: Todo) {
     @apply sticky top-0
 }
 
+.sort-option {
+    @apply text-xs cursor-pointer
+}
+
+.sort-option:not(:last-child) {
+    @apply border-b py-2
+}
+
+.sort-option:last-child {
+    @apply pt-2
+}
 
 th {
     @apply bg-primary text-sm text-left text-white font-normal p-4;

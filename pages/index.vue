@@ -119,7 +119,7 @@
     :isDelete="true"
 >
     <template #modal-body>
-        <div class="m-10">
+        <div class="m-8">
             Are you sure you want to delete this task?
         </div>
     </template>

@@ -41,6 +41,7 @@
                 <button
                     class="underline font-semibold text-slate-800"
                     @click="closeForm"
+                    type="button"
                 >
                     Cancel
                 </button>
@@ -72,21 +73,30 @@ const { todoList } = storeToRefs(todoStore);
 const props = withDefaults(defineProps<{
     edit?: boolean,
     submitHandler: Function
+    taskDetails?: Todo
 }>(), {
-    edit: false
+    edit: false,
+    taskDetails: () => ({
+        id: null,
+        name: null,
+        description: null,
+        time_left: null,
+        start_date: null,
+        end_date: null,
+        created_at: null,
+    })
 })
 
-const formData = reactive({
-    name: null,
-    description:
-        null,
-    time_left: null,
-    start_date: null,
-    end_date: null,
-    created_at: null,
-})
-
+const formData = reactive($_.cloneDeep(props.taskDetails))
+const originalValues = $_.cloneDeep(props.taskDetails)
+const changedValues: Ref<Partial<Todo> | null> = ref(null)
 const emit = defineEmits(['close']);
+
+watch(formData, (newValue) => {
+    changedValues.value = $_.pickBy(newValue, (value, key) => {
+        return !$_.isEqual(value, originalValues[key as keyof Todo]);
+    });
+})
 
 
 const closeForm = () => {
@@ -94,16 +104,12 @@ const closeForm = () => {
 };
 
 async function onSubmit() {
-    // let payload = {};
     let startDate = $dayjs(formData.start_date)
     let endDate = $dayjs(formData.end_date)
     let timeLeft = endDate.diff(startDate)
     let days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
     let hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-    let dateNow = new Date();
-    let id = todoList.value.length
-
     let timeLeftStr = '';
     if (days > 0) {
         timeLeftStr += `${days} day${days > 1 ? 's' : ''}, `;
@@ -113,15 +119,23 @@ async function onSubmit() {
     }
     timeLeftStr += `${minutes} min${minutes > 1 ? 's' : ''}`;
 
-    const payload: Todo = {
-        ...formData,
-        id: id++,
-        start_date: $dayjs(formData.start_date).format('MMM D, YYYY hh:mm A'),
-        end_date: $dayjs(formData.end_date).format('MMM D, YYYY hh:mm A'),
-        time_left: timeLeftStr,
-        created_at: $dayjs(dateNow).format('MMM D, YYYY hh:mm A')
+    if (props.edit) {
+        let todoId = formData.id
+
+        const payload = { ...changedValues.value, time_left: timeLeftStr, }
+        props.submitHandler(payload, todoId)
+    } else {
+        let dateNow = new Date();
+        let id = todoList.value.length
+
+        const payload: Todo = {
+            ...formData,
+            id: id++,
+            time_left: timeLeftStr,
+            created_at: $dayjs(dateNow).format('MMM D, YYYY hh:mm A')
+        }
+        props.submitHandler(payload)
     }
-    props.submitHandler(payload)
 }
 
 </script>

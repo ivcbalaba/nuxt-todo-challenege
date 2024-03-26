@@ -56,8 +56,8 @@
                 <td>{{ todo.name }}</td>
                 <td>{{ todo.description }}</td>
                 <td>{{ todo.time_left }}</td>
-                <td>{{ todo.start_date }}</td>
-                <td>{{ todo.end_date }}</td>
+                <td>{{ $dayjs(todo.start_date).format('MMM D, YYYY hh:mm A') }}</td>
+                <td>{{ $dayjs(todo.end_date).format('MMM D, YYYY hh:mm A') }}</td>
                 <td>{{ todo.created_at }}</td>
                 <td>
                     <div class="flex flex-row gap-2">
@@ -72,7 +72,7 @@
                         </button>
                         <button
                             class="actions hover:text-success"
-                            @click=""
+                            @click="openEditModal(todo)"
                         >
                             <Icon
                                 icon="fe:edit"
@@ -88,12 +88,14 @@
 <ToDoModal
     :show="showModal"
     title="Create Task"
-    @close="showModal = false"
+    @close="closeTodoModal"
 >
     <template #modal-body>
         <CreateTodoForm
-            @close="showModal = false"
+            @close="closeTodoModal"
+            :taskDetails="taskDetails"
             :submitHandler="submitHandler"
+            :edit="edit"
         />
     </template>
 </ToDoModal>
@@ -128,13 +130,50 @@ const { todoList } = storeToRefs(todoStore);
 
 const showModal: Ref<boolean> = ref(false)
 const showDeleteModal: Ref<boolean> = ref(false)
+const edit: Ref<boolean> = ref(false)
 const sortVisible: Ref<boolean> = ref(false);
 const taskId: Ref<number | null> = ref(null);
+const taskDetails: Ref<Todo> = ref({
+    id: null,
+    name: null,
+    description: null,
+    time_left: null,
+    start_date: null,
+    end_date: null,
+    created_at: null,
+})
 
-function submitHandler(data: Todo) {
-    console.log(data)
-    todoStore.create(data)
+function submitHandler(data: Todo, todoId: number) {
+    if (edit.value) {
+        todoStore.editById(todoId, data)
+    } else {
+        todoStore.create(data)
+    }
+    taskDetails.value = {
+        id: null,
+        name: null,
+        description: null,
+        time_left: null,
+        start_date: null,
+        end_date: null,
+        created_at: null,
+    }
+    edit.value = false
     showModal.value = false;
+}
+
+function closeTodoModal() {
+    taskDetails.value = {
+        id: null,
+        name: null,
+        description: null,
+        time_left: null,
+        start_date: null,
+        end_date: null,
+        created_at: null,
+    }
+    edit.value = false
+    showModal.value = false
 }
 
 function openDeleteModal(id: number | null) {
@@ -147,6 +186,12 @@ function deleteTask() {
         todoStore.delete(taskId.value)
     }
     showDeleteModal.value = false;
+}
+
+function openEditModal(todo: Todo) {
+    edit.value = true
+    taskDetails.value = todo
+    showModal.value = true;
 }
 
 </script>

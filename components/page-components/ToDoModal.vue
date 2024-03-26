@@ -8,7 +8,10 @@
             <div
                 class="bg-primary rounded-t-lg h-14 p-0 m-0 text-white font-semibold flex flex-row justify-between items-center px-4">
                 {{ title }}
-                <span @click="closeModal">
+                <span
+                    @click="closeModal"
+                    class="cursor-pointer"
+                >
                     <Icon
                         icon="material-symbols:close"
                         height="18"

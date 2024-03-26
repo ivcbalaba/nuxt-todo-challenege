@@ -10,22 +10,22 @@ export const useTodoStore = defineStore({
     };
   },
   actions: {
-    create(item: Todo) {
-      this.todoList.push(item);
+    create(todo: Todo) {
+      this.todoList.push(todo);
     },
-    delete(itemId: number) {
+    delete(todoId: number) {
       const { $_ } = useNuxtApp();
-      console.log("itemId", itemId);
-      this.todoList = $_.filter(this.todoList, (item) => {
-        return item.id !== itemId;
+      console.log("todoId", todoId);
+      this.todoList = $_.filter(this.todoList, (todo) => {
+        return todo.id !== todoId;
       });
     },
-    //   toggleCompleted(idToFind) {
-    //     const todo = this.todoList.find((obj) => obj.id == idToFind);
-    //     if (todo) {
-    //       todo.completed = !todo.completed;
-    //     }
-    //   },
-    // },
+    editById(todoId: number, data: object) {
+      const { $_ } = useNuxtApp();
+      const index = $_.findIndex(this.todoList, { id: todoId });
+      if (index !== -1) {
+        this.todoList[index] = { ...this.todoList[index], ...data };
+      }
+    },
   },
 });

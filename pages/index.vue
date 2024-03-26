@@ -46,7 +46,7 @@
             <tr v-for="todo in todoList">
                 <td>{{ todo.name }}</td>
                 <td>{{ todo.description }}</td>
-                <td>{{ todo.time_left }}</td>
+                <td>{{ todo.start_date }}</td>
                 <td>{{ todo.start_date }}</td>
                 <td>{{ todo.end_date }}</td>
                 <td>{{ todo.created_at }}</td>
@@ -82,7 +82,10 @@
     @close="showModal = false"
 >
     <template #modal-body>
-        <CreateTodoForm @close="showModal = false" />
+        <CreateTodoForm
+            @close="showModal = false"
+            :submitHandler="submitHandler"
+        />
     </template>
 </ToDoModal>
 </template>
@@ -92,9 +95,9 @@
     lang="ts"
 >
 import { type Ref } from "vue";
+import { type Todo } from "~/types/todo";
 import { storeToRefs } from "pinia";
 import { useTodoStore } from "~~/store/todo";
-const { $_, $dayjs } = useNuxtApp()
 
 const todoStore = useTodoStore();
 const { todoList } = storeToRefs(todoStore);
@@ -102,6 +105,11 @@ const { todoList } = storeToRefs(todoStore);
 const showModal: Ref<boolean> = ref(false)
 const sortVisible: Ref<boolean> = ref(false);
 
+function submitHandler(data: Todo) {
+    console.log(data)
+    todoStore.create(data)
+    showModal.value = false;
+}
 
 </script>
 

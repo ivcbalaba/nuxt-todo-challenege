@@ -1,27 +1,39 @@
 <template>
 <div class="pt-4 px-4">
-    <form>
+    <form @submit.prevent="onSubmit">
         <div class="field">
             <p>Task Name</p>
-            <input type="text">
+            <input
+                type="text"
+                v-model="formData.name"
+                required
+            >
         </div>
         <div class="field">
             <p>Description</p>
             <textarea
                 rows="5"
                 cols="33"
+                v-model="formData.description"
+                required
             />
 
             <div class="flex flex-row gap-8 mt-4">
                 <div class="field">
                     <p>Start Date</p>
-                    <input type="datetime-local">
+                    <input
+                        type="datetime-local"
+                        v-model="formData.start_date"
+                        required
+                    >
                 </div>
                 <div class="field">
                     <p>End Date</p>
                     <input
                         type="datetime-local"
                         placeholder="Enter your email address"
+                        v-model="formData.end_date"
+                        required
                     >
                 </div>
             </div>
@@ -49,10 +61,29 @@
     setup
     lang="ts"
 >
+import { type Todo } from "~~/types/todo";
+import { useTodoStore } from "~~/store/todo";
+const { $_, $dayjs } = useNuxtApp()
+
+const todoStore = useTodoStore();
+const { todoList } = storeToRefs(todoStore);
+
+
 const props = withDefaults(defineProps<{
     edit: boolean,
+    submitHandler: Function
 }>(), {
     edit: false
+})
+
+const formData = reactive({
+    name: null,
+    description:
+        null,
+    // time_left: null,
+    start_date: null,
+    end_date: null,
+    created_at: null,
 })
 
 const emit = defineEmits(['close']);
@@ -61,6 +92,29 @@ const emit = defineEmits(['close']);
 const closeForm = () => {
     emit('close');
 };
+
+async function onSubmit() {
+    // let payload = {};
+    let startDate = $dayjs(formData.start_date)
+    let endDate = $dayjs(formData.end_date)
+    let timeLeft = endDate.diff(startDate)
+    let days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+    let hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+    let dateNow = new Date();
+    let id = todoList.value.length
+
+    const payload: Todo = {
+        ...formData,
+        id: id++,
+        start_date: $dayjs(formData.start_date).format('MMM D, YYYY hh:mm A'),
+        end_date: $dayjs(formData.end_date).format('MMM D, YYYY hh:mm A'),
+        // time_left: `${days} days ${hours} hrs ${minutes} mins`,
+        created_at: $dayjs(dateNow).format('MMM D, YYYY hh:mm A')
+    }
+    // console.log(payload)
+    props.submitHandler(payload)
+}
 
 </script>
 

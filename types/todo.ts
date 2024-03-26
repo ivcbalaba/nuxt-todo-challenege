@@ -3,11 +3,11 @@ export interface TodoState {
 }
 
 export interface Todo {
-  id: number;
-  name: string;
-  description: string;
-  time_left: number | string;
-  start_date: Date | string;
-  end_date: Date | string;
-  created_at: Date | string;
+  id: number | null;
+  name: string | null;
+  description: string | null;
+  // time_left: number | string | null;
+  start_date: Date | string | null;
+  end_date: Date | string | null;
+  created_at: Date | string | null;
 }

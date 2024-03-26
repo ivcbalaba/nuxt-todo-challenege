@@ -62,7 +62,7 @@
                 <td>
                     <div class="flex flex-row gap-2">
                         <button
-                            class="actions"
+                            class="actions hover:text-negative"
                             @click="openDeleteModal(todo.id)"
                         >
                             <Icon
@@ -71,7 +71,7 @@
                             />
                         </button>
                         <button
-                            class="actions"
+                            class="actions hover:text-success"
                             @click=""
                         >
                             <Icon

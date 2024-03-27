@@ -63,7 +63,7 @@
             </tr>
             <tr
                 v-else
-                v-for="todo in todoList"
+                v-for="todo in paginatedTodoList"
             >
                 <td>{{ todo.name }}</td>
                 <td>{{ todo.description }}</td>
@@ -96,6 +96,44 @@
             </tr>
         </tbody>
     </table>
+    <div class="p-4 flex flex-row justify-end w-full gap-10 text-xs pagination">
+        <div>Rows per page:
+            <select
+                class="border-b-2 border-slate-600 pb-1 outline-none"
+                v-model="rowsPerPage"
+            >
+                <option>5</option>
+                <option>10</option>
+                <option>15</option>
+                <option>20</option>
+            </select>
+        </div>
+        <div class="flex flex-row gap-4 items-center">
+            <button
+                @click="currentPage = Math.max(1, currentPage - 1)"
+                :disabled="currentPage == 1"
+                class="disabled:text-slate-400"
+            >
+                <Icon
+                    icon="iconamoon:arrow-left-2"
+                    height="16"
+                />
+            </button>
+            <div>
+                {{ currentPage }}
+            </div>
+            <button
+                @click="currentPage = Math.min(totalPages, currentPage + 1)"
+                :disabled="currentPage == totalPages"
+                class="disabled:text-slate-400"
+            >
+                <Icon
+                    icon="iconamoon:arrow-right-2"
+                    height="16"
+                />
+            </button>
+        </div>
+    </div>
 </div>
 <ToDoModal
     :show="showModal"
@@ -153,6 +191,27 @@ const taskDetails: Ref<Todo> = ref({
     start_date: null,
     end_date: null,
     created_at: null,
+})
+
+const rowsPerPage = ref(5);
+const currentPage = ref(1);
+
+const totalPages = computed(() => {
+    return Math.ceil(todoList.value.length / rowsPerPage.value);
+});
+
+
+const paginatedTodoList = computed(() => {
+    const currentPageNumber = +currentPage.value;
+    const rowsPerPageNumber = +rowsPerPage.value;
+    const start = (currentPageNumber - 1) * rowsPerPageNumber;
+    const end = start + rowsPerPageNumber;
+    return $_.slice(todoList.value, start, end);
+});
+
+watch(rowsPerPage, () => {
+    currentPage.value = 1;
+
 })
 
 function submitHandler(data: Todo, todoId: number) {
@@ -218,11 +277,15 @@ function sortTodo(sortBy: string) {
     scoped
 >
 .todo-body {
-    @apply bg-white m-10 overflow-auto max-h-[50vh]
+    @apply bg-white m-10 overflow-auto max-h-[50vh] box-border
 }
 
 .sticky-header {
     @apply sticky top-0
+}
+
+.pagination {
+    @apply mt-auto sticky -bottom-1 bg-white
 }
 
 .sort-option {
